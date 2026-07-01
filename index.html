@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Biblioteca Romántica</title>
+
+<style>
+
+body{
+margin:0;
+font-family:Arial, sans-serif;
+background: linear-gradient(135deg,#fce7f3,#ffe4e6,#fef3c7);
+color:#3f2a2a;
+}
+
+header{
+text-align:center;
+padding:30px;
+background:#b91c1c;
+color:white;
+font-size:28px;
+font-weight:bold;
+}
+
+.sub{
+text-align:center;
+margin-top:-10px;
+color:#7f1d1d;
+}
+
+.container{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+gap:20px;
+padding:20px;
+}
+
+.card{
+background:white;
+border-radius:15px;
+padding:15px;
+box-shadow:0 10px 20px rgba(0,0,0,0.15);
+border-left:6px solid #f43f5e;
+transition:0.3s;
+}
+
+.card:hover{
+transform:scale(1.02);
+}
+
+h2{
+color:#be123c;
+}
+
+button{
+margin-top:10px;
+padding:8px 12px;
+border:none;
+border-radius:10px;
+cursor:pointer;
+background:#f43f5e;
+color:white;
+font-weight:bold;
+}
+
+button:hover{
+background:#be123c;
+}
+
+.info{
+display:none;
+margin-top:10px;
+font-size:14px;
+line-height:1.4;
+}
+
+a{
+color:#b91c1c;
+font-weight:bold;
+text-decoration:none;
+}
+
+.fav{
+background:#facc15;
+color:black;
+}
+
+.topbar{
+text-align:center;
+padding:10px;
+}
+
+</style>
+</head>
+
+<body>
+
+<header>💖 Biblioteca Romántica</header>
+<p class="sub">Libros de romance, historias inolvidables y amor eterno 📚</p>
+
+<div class="topbar">
+<button onclick="mostrarFavoritos()">⭐ Ver Favoritos</button>
+<button onclick="copiarTodo()">📋 Copiar lista</button>
+</div>
+
+<div id="lista" class="container"></div>
+
+<div id="favBox" style="display:none;padding:20px;">
+<h2>⭐ Favoritos</h2>
+<ul id="favoritos"></ul>
+</div>
+
+<script>
+
+const libros = [
+
+{
+titulo:"El mapa de los anhelos",
+autor:"Alice Kellen",
+anio:"2022",
+desc:"Una historia sobre amor, pérdidas y la búsqueda de sentido en la vida mientras los personajes descubren sus propios sueños.",
+link:"https://share.google/aQd9DUi67RTdoyHwM"
+},
+
+{
+titulo:"Orgullo y Prejuicio",
+autor:"Jane Austen",
+anio:"1813",
+desc:"Una historia clásica sobre amor, diferencias sociales y malentendidos entre Elizabeth Bennet y Mr. Darcy.",
+link:"https://librerialannister.com/product/orgullo-y-prejuicio-3/"
+},
+
+{
+titulo:"Sentido y Sensibilidad",
+autor:"Jane Austen",
+anio:"1811",
+desc:"Dos hermanas enfrentan el amor y la sociedad tras la pérdida de su padre, mostrando razón y emoción en equilibrio.",
+link:"https://www.akal.com/libro/sentido-y-sensibilidad-edicion-anotada_55105/"
+},
+
+{
+titulo:"Cartas a los perdidos",
+autor:"Brigid Kemmerer",
+anio:"2017",
+desc:"Dos jóvenes conectan a través de cartas dejadas en un cementerio, sin saber quiénes son realmente.",
+link:"https://www.buscalibre.com.co/libro-cartas-a-los-perdidos/9789877472691/p/48246263"
+},
+
+{
+titulo:"El día que dejó de nevar en Alaska",
+autor:"Alice Kellen",
+anio:"2017",
+desc:"Una joven marcada por su pasado llega a Alaska donde encontrará amor y segundas oportunidades.",
+link:"https://www.amazon.com/dej%C3%B3-nevar-Alaska-Fresh-Spanish/dp/8417421564"
+},
+
+{
+titulo:"Si fuéramos eternos",
+autor:"Emma Gil",
+anio:"Contemporáneo",
+desc:"Una historia moderna de amor, decisiones y la idea de vivir un sentimiento sin límites.",
+link:"https://www.amazon.com/-/es/Emma-Gil-ebook/dp/B0G8FRBQJS"
+},
+
+{
+titulo:"El arte de ser nosotros",
+autor:"Inma Rubiales",
+anio:"2022",
+desc:"Dos jóvenes con pasados difíciles descubren que el amor puede sanar heridas profundas.",
+link:"https://avifyshop.com/cr/elartedesernosotrosinmarubiales.html"
+},
+
+{
+titulo:"Mejor que en las películas",
+autor:"Lynn Painter",
+anio:"2021",
+desc:"Una historia divertida y romántica sobre expectativas del amor versus la realidad.",
+link:"https://www.amazon.com/-/es/Mejor-que-las-pel%C3%ADculas-Spanish/dp/8419252182"
+}
+
+];
+
+let favoritos=[];
+
+function render(){
+
+let cont=document.getElementById("lista");
+cont.innerHTML="";
+
+libros.forEach((l,i)=>{
+
+let div=document.createElement("div");
+div.className="card";
+
+div.innerHTML=`
+<h2>${l.titulo}</h2>
+<p><b>Autor:</b> ${l.autor}</p>
+<p><b>Año:</b> ${l.anio}</p>
+
+<button onclick="toggle(${i})">📖 Ver descripción</button>
+<button onclick="fav(${i})" class="fav">⭐ Favorito</button>
+
+<div class="info" id="info${i}">
+<p>${l.desc}</p>
+<p>📚 Comprar: <a href="${l.link}" target="_blank">Ir al enlace</a></p>
+</div>
+`;
+
+cont.appendChild(div);
+});
+
+}
+
+function toggle(i){
+let el=document.getElementById("info"+i);
+el.style.display = el.style.display==="block"?"none":"block";
+}
+
+function fav(i){
+if(!favoritos.includes(i)){
+favoritos.push(i);
+alert("Agregado a favoritos 💖");
+}
+}
+
+function mostrarFavoritos(){
+let box=document.getElementById("favBox");
+let ul=document.getElementById("favoritos");
+
+box.style.display="block";
+ul.innerHTML="";
+
+favoritos.forEach(i=>{
+let li=document.createElement("li");
+li.innerText=libros[i].titulo;
+ul.appendChild(li);
+});
+}
+
+function copiarTodo(){
+let texto=libros.map(l=>
+`${l.titulo} - ${l.autor} (${l.anio})`
+).join("\n");
+
+navigator.clipboard.writeText(texto);
+alert("Lista copiada 📋");
+}
+
+render();
+
+</script>
+
+</body>
+</html>
